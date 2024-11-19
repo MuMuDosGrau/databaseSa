@@ -20,10 +20,30 @@ export const listarEPI = async (req, res) => {
   }
 };
 
+export const alterarEPI = async (req, res) => {
+  try {
+    const { id } = req.params; // Obtém o ID do EPI pela URL
+    const { descricao } = req.body; // Nova descrição do EPI
+
+    // Atualiza o EPI no banco de dados
+    const [linhasAtualizadas] = await EPI.update({ descricao }, { where: { id } });
+
+    if (linhasAtualizadas === 0) {
+      return res.status(404).json({ error: 'EPI não encontrado' });
+    }
+
+    const epiAtualizado = await EPI.findByPk(id); // Recupera o EPI atualizado
+    res.status(200).json(epiAtualizado);
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao alterar EPI' });
+  }
+};
+
+
 export const removerEPI = async (req, res) => {
   try {
-    const { descricao } = req.body;
-    const deletado = await EPI.destroy({ where: { descricao } });
+    const { id } = req.params; // Obtém o ID da URL
+    const deletado = await EPI.destroy({ where: { id } });
 
     if (!deletado) {
       return res.status(404).json({ error: 'EPI não encontrado' });

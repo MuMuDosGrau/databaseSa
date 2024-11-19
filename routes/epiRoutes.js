@@ -10,14 +10,16 @@ import {
   registrarDevolucao, 
   mostrarRetiradas, 
   mostrarDevolucoes, 
-  exibirHistorico 
+  exibirHistorico, 
+  alterarEPI
 } from '../Controllers/Epi.js';
 
 const router = express.Router();
 
-router.post('/epi/cadastrar', cadastrarEPI);
+router.post('/epi', cadastrarEPI);
 router.get('/epi/listar', listarEPI);
-router.delete('/epi/remover', removerEPI); 
+router.put('/epi/:id', alterarEPI);
+router.delete('/epi/:id', removerEPI); 
 
 router.post('/funcionario/cadastrar', cadastrarFuncionario);
 router.get('/funcionario/listar', listarFuncionario);
