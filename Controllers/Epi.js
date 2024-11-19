@@ -73,10 +73,30 @@ export const listarFuncionario = async (req, res) => {
   }
 };
 
+export const alterarFuncionario = async (req, res) => {
+  try {
+    const { id } = req.params; // Obtém o ID do funcionário pela URL
+    const { nome } = req.body; // Novo nome do funcionário
+
+    // Atualiza o funcionário no banco de dados
+    const [linhasAtualizadas] = await Funcionario.update({ nome }, { where: { id } });
+
+    if (linhasAtualizadas === 0) {
+      return res.status(404).json({ error: 'Funcionário não encontrado' });
+    }
+
+    const funcionarioAtualizado = await Funcionario.findByPk(id); // Recupera o funcionário atualizado
+    res.status(200).json(funcionarioAtualizado);
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao alterar funcionário' });
+  }
+};
+
 export const removerFuncionario = async (req, res) => {
   try {
-    const { nome } = req.body;
-    const deletado = await Funcionario.destroy({ where: { nome } });
+    const { id } = req.params; // Obtém o ID do funcionário dos parâmetros da URL
+
+    const deletado = await Funcionario.destroy({ where: { id } });
 
     if (!deletado) {
       return res.status(404).json({ error: 'Funcionário não encontrado' });
